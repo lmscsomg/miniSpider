@@ -25,7 +25,8 @@ def crawl_key_item(table):
                 tree.xpath('//th[@name="tm"]/span/text()'),
                 tree.xpath('//th[@name="hp"]/text()'),
                 tree.xpath('//th[@name="lcp"]/text()'),
-                tree.xpath('//th[@name="ape"]/span/text()')]
+                tree.xpath('//th[@name="ape"]/span/text()'),
+                ]
 
     table['0'] = key_item
 
@@ -64,11 +65,25 @@ def generate_xls(table):
     book = xlwt.Workbook(encoding='utf-8')
     sheet = book.add_sheet('stock')
 
-    for row in range(len(tabledata)):
+    row_number = len(tabledata)
+
+    col_number = len(tabledata['0'])
+    for row in range(row_number):
         rowdata = tabledata[str(row)]
 
         for col in range(len(rowdata)):
             sheet.write(row, col, rowdata[col])
+
+    time_item = u'\u6570\u636e\u6293\u53d6\u65f6\u95f4'  # unicode of Chinese char
+    cur_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
+
+    #add the TIME item
+    for row in range(row_number):
+        if row == 0:
+            sheet.write(row, col_number, time_item)
+        else:
+            sheet.write(row, col_number, cur_time)
+
     book.save('stock.xls')
 
 
